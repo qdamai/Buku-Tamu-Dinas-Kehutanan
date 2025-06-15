@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buku Tamu Dinas Kehutanan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Buku Tamu Dinas Kehutanan</h1>
+        </header>
+
+        <main>
+            <section class="stats-section">
+                <div class="stat-card">
+                    <h3>Total Tamu</h3>
+                    <p id="totalTamu">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Tamu Hari Ini</h3>
+                    <p id="tamuHariIni">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Tamu Bulan Ini</h3>
+                    <p id="tamuBulanIni">0</p>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2>Form Tamu</h2>
+                <form id="tamuForm">
+                    <input type="hidden" id="tamuId">
+                    <div class="form-group">
+                        <label for="nama">Nama Lengkap:</label>
+                        <input type="text" id="nama" name="nama" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="instansi">Instansi/Perusahaan:</label>
+                        <input type="text" id="instansi" name="instansi" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="keperluan">Keperluan Kunjungan:</label>
+                        <select id="keperluan" name="keperluan" required>
+                            <option value="">Pilih Keperluan</option>
+                            <option value="Konsultasi">Konsultasi</option>
+                            <option value="Pengajuan Izin">Pengajuan Izin</option>
+                            <option value="Koordinasi">Koordinasi</option>
+                            <option value="Kunjungan Kerja">Kunjungan Kerja</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tanggal">Tanggal Kunjungan:</label>
+                        <input type="date" id="tanggal" name="tanggal" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="catatan">Catatan (Opsional):</label>
+                        <textarea id="catatan" name="catatan"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" id="submitBtn" class="btn btn-primary">Simpan</button>
+                        <button type="button" id="resetBtn" class="btn btn-secondary">Reset</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="data-section">
+                <div class="section-header">
+                    <h2>Data Tamu</h2>
+                    <div class="header-right-controls">
+                        <div class="header-buttons">
+                            <button id="reloadBtn" class="btn btn-primary" title="Refresh Data">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button id="exportBtn" class="btn btn-success" title="Export ke CSV">
+                                <i class="fas fa-file-csv"></i> Export CSV
+                            </button>
+                            <button id="printBtn" class="btn btn-info" title="Export ke PDF">
+                                <i class="fas fa-file-pdf"></i> Export PDF
+                            </button>
+                        </div>
+                        <div class="filter-box">
+                            <div class="form-group search-group">
+                                <label for="searchInput">Cari (Nama/Instansi):</label>
+                                <input type="text" id="searchInput" placeholder="Cari...">
+                            </div>
+                            <div class="date-filter-group">
+                                <div class="form-group">
+                                    <label for="filterTanggalMulai">Tanggal Mulai:</label>
+                                    <input type="date" id="filterTanggalMulai">
+                                </div>
+                                <div class="form-group">
+                                    <label for="filterTanggalSelesai">Tanggal Selesai:</label>
+                                    <input type="date" id="filterTanggalSelesai">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="tamuTable">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Tanggal</th>
+                                <th>Nama</th>
+                                <th>Instansi</th>
+                                <th>Keperluan</th>
+                                <th>Catatan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tamuList">
+                            <!-- Data tamu akan ditampilkan di sini -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2>Konfirmasi Hapus</h2>
+            <p>Apakah Anda yakin ingin menghapus data tamu ini?</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelDelete">Batal</button>
+                <button class="btn btn-danger" id="confirmDelete">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Data Tamu</h2>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label for="editNama">Nama Lengkap:</label>
+                    <input type="text" id="editNama" required>
+                </div>
+                <div class="form-group">
+                    <label for="editInstansi">Instansi/Perusahaan:</label>
+                    <input type="text" id="editInstansi" required>
+                </div>
+                <div class="form-group">
+                    <label for="editKeperluan">Keperluan Kunjungan:</label>
+                    <select id="editKeperluan" required>
+                        <option value="">Pilih Keperluan</option>
+                        <option value="Konsultasi">Konsultasi</option>
+                        <option value="Pengajuan Izin">Pengajuan Izin</option>
+                        <option value="Koordinasi">Koordinasi</option>
+                        <option value="Kunjungan Kerja">Kunjungan Kerja</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editTanggal">Tanggal Kunjungan:</label>
+                    <input type="date" id="editTanggal" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCatatan">Catatan (Opsional):</label>
+                    <textarea id="editCatatan"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelEdit">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html> 

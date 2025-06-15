@@ -1,0 +1,69 @@
+{
+  "name": "buku-tamu-kehutanan",
+  "version": "1.0.0",
+  "description": "Aplikasi Buku Tamu Kehutanan",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.bukutamukehutanan.app",
+    "productName": "Buku Tamu Kehutanan",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json",
+      "preload.js"
+    ],
+    "extraResources": [
+      {
+        "from": "data",
+        "to": "data"
+      },
+      {
+        "from": "src/renderer",
+        "to": "src/renderer"
+      },
+      {
+        "from": "preload.js",
+        "to": "preload.js"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Buku Tamu Kehutanan",
+      "deleteAppDataOnUninstall": true,
+      "perMachine": false,
+      "allowElevation": false,
+      "runAfterFinish": true
+    }
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.2",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.1"
+  }
+} 
